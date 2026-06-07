@@ -1,0 +1,30 @@
+services:
+  apache:
+    build: .
+    container_name: hospital-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www:/var/www/html
+    networks:
+      - hospital-network
+
+  mysql:
+    image: mariadb:10.11
+    container_name: hospital-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: hospital_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
+    networks:
+      - hospital-network
+
+networks:
+  hospital-network:
+    driver: bridge
